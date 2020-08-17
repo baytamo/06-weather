@@ -21,7 +21,10 @@ $(document).ready(function () {
     let savedCity = $("<p>").text(citySearch);
     savedCity.addClass("cityListItem");
     $searchResults.prepend(savedCity);
+    cityArray.push(citySearch);
+    localStorage.setItem("cities", JSON.stringify(cityArray));
     forecast();
+    console.log(cityArray);
   });
 
   function todaysWeather() {
@@ -42,11 +45,8 @@ $(document).ready(function () {
       url: URL,
       method: "GET",
     }).then(function (response) {
-      console.log(response);
       latitude = response.coord.lat;
       longitude = response.coord.lon;
-
-      console.log(latitude, longitude);
 
       let city = $("<p>").addClass("city");
 
@@ -86,7 +86,6 @@ $(document).ready(function () {
       $todayStats.append(date, tempHigh, tempLow, humidity, wind);
       uvIndex();
     });
-    storeCities();
   }
 
   function uvIndex() {
@@ -128,7 +127,7 @@ $(document).ready(function () {
       let extreme = $("<div>")
         .addClass("col-sm-2 p-2")
         .text("extreme")
-        .css("background-color", "violet");
+        .css("background-color", "blueviolet");
 
       uvRow.append(low, moderate, high, veryHigh, extreme);
       $todayStats.append(uvRow);
@@ -150,7 +149,7 @@ $(document).ready(function () {
       }
 
       if (uvIndex >= 11) {
-        UV.css("background-color", "violet");
+        UV.css("background-color", "blueviolet");
       }
     });
   }
@@ -171,7 +170,7 @@ $(document).ready(function () {
       method: "GET",
     }).then(function (response) {
       for (var i = 0; i < 5; i++) {
-        let nextDay = $("<div>").addClass("col-sm-2 nextDay");
+        let nextDay = $("<div>").addClass("col-sm-2 pt-2 nextDay");
 
         let date = $("<p>").text(
           moment()
@@ -205,22 +204,15 @@ $(document).ready(function () {
     });
   }
 
-  function storeCities() {
-    cityArray.push(citySearch);
-    localStorage.setItem("cities", JSON.stringify(cityArray));
-  }
-
   function cityColumn() {
     let getCities = JSON.parse(localStorage.getItem("cities"));
-    
-
     if (getCities) {
       cityArray = getCities;
       mostRecentCity = getCities[getCities.length - 1];
       console.log(mostRecentCity);
       for (i = 0; i < cityArray.length; i++) {
         let savedCity = $("<p>").text(cityArray[i]);
-        savedCity.addClass(`cityListItem ${i}`);
+        savedCity.addClass("cityListItem");
         $searchResults.prepend(savedCity);
       }
     }
