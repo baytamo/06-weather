@@ -32,7 +32,7 @@ $(document).ready(function () {
       citySearch = $(event.target).text();
     }
     let URL =
-      "http://api.openweathermap.org/data/2.5/weather?q=" +
+      "https://api.openweathermap.org/data/2.5/weather?q=" +
       citySearch +
       "&appid=" +
       apiKey +
@@ -91,7 +91,7 @@ $(document).ready(function () {
 
   function uvIndex() {
     let URL =
-      "http://api.openweathermap.org/data/2.5/uvi?appid=" +
+      "https://api.openweathermap.org/data/2.5/uvi?appid=" +
       apiKey +
       "&lat=" +
       latitude +
@@ -163,7 +163,7 @@ $(document).ready(function () {
     }
     $.ajax({
       url:
-        "http://api.openweathermap.org/data/2.5/forecast?q=" +
+        "https://api.openweathermap.org/data/2.5/forecast?q=" +
         citySearch +
         "&appid=" +
         apiKey +
