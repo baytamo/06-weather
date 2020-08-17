@@ -14,13 +14,21 @@ $(document).ready(function () {
   let apiKey = "166a433c57516f51dfab1f7edaed8413";
 
   cityColumn();
+  checkRecent();
+
+  $(".cityListItem").on("click", function (event) {
+    todaysWeather();
+    forecast();
+  });
 
   $searchButton.on("click", function (event) {
     event.preventDefault();
     todaysWeather();
+
     let savedCity = $("<p>").text(citySearch);
     savedCity.addClass("cityListItem");
     $searchResults.prepend(savedCity);
+
     cityArray.push(citySearch);
     localStorage.setItem("cities", JSON.stringify(cityArray));
     forecast();
@@ -45,6 +53,9 @@ $(document).ready(function () {
       url: URL,
       method: "GET",
     }).then(function (response) {
+      console.log(response);
+      console.log(response.timezone);
+      
       latitude = response.coord.lat;
       longitude = response.coord.lon;
 
@@ -61,7 +72,7 @@ $(document).ready(function () {
       let today = $("<p>").addClass("today");
       today.text(moment().format("dddd LT"));
 
-      let date = $("<p>").text("Today is " + moment().format("MMMM DD, YYYY"));
+      let date = $("<p>").text("Today is: " + moment().format("MMMM DD, YYYY"));
 
       let tempHigh = $("<p>").addClass("tempHigh");
       tempHigh.text("High: " + Math.round(response.main.temp_max) + "º");
@@ -134,21 +145,13 @@ $(document).ready(function () {
 
       if (uvIndex <= 2) {
         UV.css("background-color", "green");
-      }
-
-      if (uvIndex <= 5) {
+      } else if (uvIndex <= 5) {
         UV.css("background-color", "yellow");
-      }
-
-      if (uvIndex <= 7) {
+      } else if (uvIndex <= 7) {
         UV.css("background-color", "orange");
-      }
-
-      if (uvIndex <= 10) {
+      } else if (uvIndex <= 10) {
         UV.css("background-color", "red");
-      }
-
-      if (uvIndex >= 11) {
+      } else {
         UV.css("background-color", "blueviolet");
       }
     });
@@ -169,12 +172,12 @@ $(document).ready(function () {
         "&units=imperial",
       method: "GET",
     }).then(function (response) {
-      for (var i = 0; i < 5; i++) {
+      for (var i = 1; i < 6; i++) {
         let nextDay = $("<div>").addClass("col-sm-2 pt-2 nextDay");
 
         let date = $("<p>").text(
           moment()
-            .add(i + 1, "days")
+            .add(i, "days")
             .format("ddd DD MMM")
         );
 
@@ -208,8 +211,6 @@ $(document).ready(function () {
     let getCities = JSON.parse(localStorage.getItem("cities"));
     if (getCities) {
       cityArray = getCities;
-      mostRecentCity = getCities[getCities.length - 1];
-      console.log(mostRecentCity);
       for (i = 0; i < cityArray.length; i++) {
         let savedCity = $("<p>").text(cityArray[i]);
         savedCity.addClass("cityListItem");
@@ -218,8 +219,14 @@ $(document).ready(function () {
     }
   }
 
-  $(".cityListItem").on("click", function () {
-    todaysWeather();
-    forecast();
-  });
+  function checkRecent() {
+    let getCities = JSON.parse(localStorage.getItem("cities"));
+    if (getCities !== null && $searchBar.val() == null) {
+      mostRecentCity = getCities[getCities.length - 1];
+      console.log(mostRecentCity);
+      citySearch = mostRecentCity;
+      todaysWeather();
+      forecast();
+    }
+  }
 });
