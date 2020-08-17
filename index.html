@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Weather Dashboard</title>
+
+    <!-- bootstrap -->
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    />
+
+    <!-- google fonts will go below -->
+    <link href="https://fonts.googleapis.com/css2?family=Russo+One&display=swap" rel="stylesheet">
+
+    <!--  style sheet -->
+    <link rel="stylesheet" href="assets/styles.css" />
+  </head>
+  <body>
+    
+    <header>
+      <h1>
+        Weather Dashboard
+      </h1>
+    </header>
+
+    <!-- search bar with results-->
+    
+      <div class="row">
+        <!-- first main column with side bar -->
+        <aside class="col-12 col-sm-3">
+          <form>
+            <label for="searchBar">Search for a City:</label>
+            <br/><input placeholder="city name" id="searchBar" /><img
+              alt="magnifying glass emoji"
+              width="38px"
+              class="searchButton"
+              src="Assets/magnifier.png"
+            />
+          </form>
+          <div class="col-12 searchResults"></div>
+        </aside>
+
+        <!-- second main column with search results -->
+        <section class="col-12 col-sm-9">
+          <div class="row">
+
+            <div class="col-sm-4 todayWeather"></div>
+            <div class="col-sm-6 todayStats"></div>
+       
+
+          <div class="row nextFive"></div>
+        </section>
+      </div>
+    </div>
+
+    <!-- jQuery -->
+    <script
+      src="https://code.jquery.com/jquery-3.5.1.js"
+      integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
+      crossorigin="anonymous"
+    ></script>
+
+    <!-- moments -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+
+    <!-- js -->
+    <script src="Assets/scripts.js"></script>
+  </body>
+</html>
