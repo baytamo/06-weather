@@ -1,71 +1,72 @@
 body {
-    margin: 0 auto;
-    padding: 50px;
+  margin: 0 auto;
+  padding: 50px;
+  font-family: "Taviraj", serif;
 }
 h1 {
-    border-bottom: 10px dotted;
-    text-align: center;
-    padding: 20px;
-    font-family: 'Russo One', sans-serif;
+  border-bottom: 10px dotted;
+  text-align: center;
+  padding: 20px;
+  font-family: "Russo One", sans-serif;
 }
 
 .container {
-    width: 100%;
+  width: 100%;
 }
-.searchBar{
-    background-color: lightgrey;
+.searchBar {
+  background-color: lightgrey;
 }
 
 .nextDay {
-    border: 1px dotted;
-    border-radius: 20px;
-    margin: 10px;
+  border: 1px dotted;
+  border-radius: 20px;
+  margin: 10px;
 }
 
 input {
-    background-color: #FCF9F9;
-    border: 1px;
-    border-radius: 8px;
-    padding: 8px;
-    padding-right: 30px;
+  background-color: #fcf9f9;
+  border: 1px;
+  border-radius: 8px;
+  padding: 8px;
+  padding-right: 30px;
 }
 
 p {
-    line-height: 1;
+  line-height: 1;
 }
 
-
-.todayWeather, .todayStats {
-    border: 1px dotted;
-    padding: 20px;
-    border-radius: 20px;
-    margin: 5px;
+.todayWeather,
+.todayStats {
+  border: 1px dotted;
+  padding: 20px;
+  border-radius: 20px;
+  margin: 5px;
 }
 
 .city {
-    font-size: 30px;
+  font-size: 30px;
 }
 
 .currentTemp {
-    font-size: 80px;
+  font-size: 80px;
 }
 
 .cityListItem {
-    margin: 10px;
-    padding: 10px;
-    border: 1px dotted;
+  margin: 10px;
+  padding: 10px;
+  border: 1px dotted;
 }
 
 .cityListItem:hover {
-    background-color: #FCF9F9;
+  background-color: #fcf9f9;
 }
 
 .uvi {
-    padding: 10px;
-    border: 1px black solid;
+  padding: 10px;
+  border: 1px black solid;
 }
 
-.uviKey{
-    padding: 10px; 
-    margin: 10px;
+.uviKey {
+  padding: 10px;
+  margin: 10px;
 }
