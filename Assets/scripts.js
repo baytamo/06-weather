@@ -11,7 +11,7 @@ $(document).ready(function () {
   let longitude;
   let mostRecentCity;
   let cityArray = [];
-  let apiKey = "137d2d7c8cbea26f00e792cd98bb231e";
+  let apiKey = "166a433c57516f51dfab1f7edaed8413";
 
   cityColumn();
 

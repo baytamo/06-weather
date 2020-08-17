@@ -1,8 +1,9 @@
 body {
   margin: 0 auto;
   padding: 50px;
-  font-family: "Taviraj", serif;
+  font-family: 'Rubik', sans-serif;
 }
+
 h1 {
   border-bottom: 10px dotted;
   text-align: center;
