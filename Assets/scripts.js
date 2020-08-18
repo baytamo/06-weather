@@ -16,6 +16,7 @@ $(document).ready(function () {
 
   cityColumn();
 
+  // check first for local storage; populate with search results and widgets if it is available
   function cityColumn() {
     if (getCities) {
       cityArray = getCities;
@@ -29,16 +30,19 @@ $(document).ready(function () {
     }
   }
 
+  // on click for cities listed in left column
   $(".cityListItem").on("click", function (event) {
     $(".cityListItem").data("clicked", true);
     todaysWeather();
     forecast();
   });
 
+  // on click for search button
   $searchButton.on("click", function (event) {
     event.preventDefault();
     todaysWeather();
 
+    // add this item to left column
     let savedCity = $("<p>").text(citySearch);
     savedCity.addClass("cityListItem");
     savedCity.on("click", function (event) {
@@ -46,21 +50,27 @@ $(document).ready(function () {
       forecast();
     });
     $searchResults.prepend(savedCity);
+
+    // add this item to local storage
     cityArray.push(citySearch);
     localStorage.setItem("cities", JSON.stringify(cityArray));
     forecast();
   });
 
+  // display today's weather details
   function todaysWeather() {
     $todayWeather.empty();
     $todayStats.empty();
 
     getCities = JSON.parse(localStorage.getItem("cities"));
 
+    // if search bar is populated, use this value
     if ($searchBar.val()) {
       citySearch = $.trim($searchBar.val());
+      // if city in left column has been clicked, use this value
     } else if ($(".cityListItem").data("clicked")) {
       citySearch = $(event.target).text();
+      // if localStorage exists, use this value upon refresh
     } else if (
       getCities &&
       !$searchBar.val() &&
@@ -85,8 +95,10 @@ $(document).ready(function () {
       longitude = response.coord.lon;
 
       let city = $("<p>").addClass("city");
-
       city.text(response.name + ", " + response.sys.country);
+      if (response.sys.country == undefined) {
+        city.text(response.name);
+      }
 
       let description = $("<p>").addClass("description");
       description.text(response.weather[0].description);
@@ -124,6 +136,7 @@ $(document).ready(function () {
     });
   }
 
+  // show today's UV index
   function uvIndex() {
     let URL =
       "https://api.openweathermap.org/data/2.5/uvi?appid=" +
@@ -182,6 +195,7 @@ $(document).ready(function () {
     });
   }
 
+  // show forecast for the next 5 days
   function forecast() {
     $nextFive.empty();
 
@@ -207,6 +221,7 @@ $(document).ready(function () {
         "&units=imperial",
       method: "GET",
     }).then(function (response) {
+      // start at index 1 because index 0 is today
       for (var i = 1; i < 6; i++) {
         let nextDay = $("<div>").addClass("col-sm-2 pt-2 nextDay");
 
