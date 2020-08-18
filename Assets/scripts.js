@@ -32,7 +32,7 @@ $(document).ready(function () {
 
   // on click for cities listed in left column
   $(".cityListItem").on("click", function (event) {
-    event.preventDefault();
+    
     $(".cityListItem").data("clicked", true);
     todaysWeather();
     forecast();
@@ -40,7 +40,7 @@ $(document).ready(function () {
 
   // on click for search button
   $searchButton.on("click", function (event) {
-    event.preventDefault();
+    
     todaysWeather();
 
     // add this item to left column
@@ -60,7 +60,7 @@ $(document).ready(function () {
 
   // on submit for search input
   $("form").on("submit", function (event) {
-    event.preventDefault();
+    
     todaysWeather();
 
     // add this item to left column
