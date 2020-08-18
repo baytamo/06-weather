@@ -12,7 +12,7 @@ $(document).ready(function () {
   let latitude;
   let longitude;
 
-  let apiKey = "166a433c57516f51dfab1f7edaed8413";
+  let apiKey = "308a7a0c0f1f0560d6bd1b9fd0cf597d";
 
   cityColumn();
 
