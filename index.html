@@ -11,7 +11,7 @@
       href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
     />
 
-    <!-- google fonts will go below -->
+    <!-- google fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Rubik&family=Russo+One&display=swap" rel="stylesheet">
 
     <!--  style sheet -->
@@ -25,13 +25,12 @@
       </h1>
     </header>
 
-    <!-- search bar with results-->
-    
       <div class="row">
         <!-- first main column with side bar -->
         <aside class="col-12 col-sm-3">
           <form>
             <label for="searchBar">Search for a City:</label>
+            <!-- search bar -->
             <br/><input placeholder="city name" id="searchBar" /><img
               alt="magnifying glass emoji"
               width="38px"
@@ -39,6 +38,7 @@
               src="Assets/magnifier.png"
             />
           </form>
+          <!-- search results will display here -->
           <div class="col-12 searchResults"></div>
         </aside>
 
@@ -46,11 +46,14 @@
         <section class="col-12 col-sm-9">
           <div class="row">
 
+            <!-- today's temperature will display here -->
             <div class="col-sm-4 todayWeather"></div>
-            <div class="col-sm-6 todayStats"></div>
-       
 
-          <div class="row nextFive"></div>
+            <!-- other weather details for today will display here -->
+            <div class="col-sm-6 todayStats"></div>
+
+            <!-- five day forecast will display here -->
+            <div class="row nextFive"></div>
         </section>
       </div>
     </div>
