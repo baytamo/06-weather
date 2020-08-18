@@ -7,16 +7,30 @@ $(document).ready(function () {
   let $todayStats = $(".todayStats");
   let $nextFive = $(".nextFive");
   let citySearch;
+  let cityArray = [];
+  let getCities = JSON.parse(localStorage.getItem("cities"));
   let latitude;
   let longitude;
-  let mostRecentCity;
-  let cityArray = [];
+
   let apiKey = "166a433c57516f51dfab1f7edaed8413";
 
   cityColumn();
-  checkRecent();
+
+  function cityColumn() {
+    if (getCities) {
+      cityArray = getCities;
+      todaysWeather();
+      forecast();
+      for (i = 0; i < cityArray.length; i++) {
+        let savedCity = $("<p>").text(cityArray[i]);
+        savedCity.addClass("cityListItem");
+        $searchResults.prepend(savedCity);
+      }
+    }
+  }
 
   $(".cityListItem").on("click", function (event) {
+    $(".cityListItem").data("clicked", true);
     todaysWeather();
     forecast();
   });
@@ -27,21 +41,35 @@ $(document).ready(function () {
 
     let savedCity = $("<p>").text(citySearch);
     savedCity.addClass("cityListItem");
+    savedCity.on("click", function (event) {
+      todaysWeather();
+      forecast();
+    });
     $searchResults.prepend(savedCity);
-
     cityArray.push(citySearch);
     localStorage.setItem("cities", JSON.stringify(cityArray));
     forecast();
-    console.log(cityArray);
   });
 
   function todaysWeather() {
     $todayWeather.empty();
     $todayStats.empty();
-    citySearch = $.trim($searchBar.val());
-    if (!citySearch) {
+
+    getCities = JSON.parse(localStorage.getItem("cities"));
+
+    if ($searchBar.val()) {
+      citySearch = $.trim($searchBar.val());
+    } else if ($(".cityListItem").data("clicked")) {
       citySearch = $(event.target).text();
+    } else if (
+      getCities &&
+      !$searchBar.val() &&
+      !$(".cityListItem").data("clicked")
+    ) {
+      let mostRecentCity = getCities[getCities.length - 1];
+      citySearch = mostRecentCity;
     }
+
     let URL =
       "https://api.openweathermap.org/data/2.5/weather?q=" +
       citySearch +
@@ -53,9 +81,6 @@ $(document).ready(function () {
       url: URL,
       method: "GET",
     }).then(function (response) {
-      console.log(response);
-      console.log(response.timezone);
-      
       latitude = response.coord.lat;
       longitude = response.coord.lon;
 
@@ -159,10 +184,20 @@ $(document).ready(function () {
 
   function forecast() {
     $nextFive.empty();
-    citySearch = $.trim($searchBar.val());
-    if (!citySearch) {
+
+    if ($searchBar.val()) {
+      citySearch = $.trim($searchBar.val());
+    } else if (!$searchBar.val() && $(".cityListItem").data("clicked")) {
       citySearch = $(event.target).text();
+    } else if (
+      getCities &&
+      !$searchBar.val() &&
+      !$(".cityListItem").data("clicked")
+    ) {
+      let mostRecentCity = getCities[getCities.length - 1];
+      citySearch = mostRecentCity;
     }
+
     $.ajax({
       url:
         "https://api.openweathermap.org/data/2.5/forecast?q=" +
@@ -175,11 +210,7 @@ $(document).ready(function () {
       for (var i = 1; i < 6; i++) {
         let nextDay = $("<div>").addClass("col-sm-2 pt-2 nextDay");
 
-        let date = $("<p>").text(
-          moment()
-            .add(i, "days")
-            .format("ddd DD MMM")
-        );
+        let date = $("<p>").text(moment().add(i, "days").format("ddd DD MMM"));
 
         let temp = $("<p>").text(
           "temp: " + Math.round(response.list[i].main.temp) + "ºF"
@@ -205,28 +236,5 @@ $(document).ready(function () {
         $searchBar.val("");
       }
     });
-  }
-
-  function cityColumn() {
-    let getCities = JSON.parse(localStorage.getItem("cities"));
-    if (getCities) {
-      cityArray = getCities;
-      for (i = 0; i < cityArray.length; i++) {
-        let savedCity = $("<p>").text(cityArray[i]);
-        savedCity.addClass("cityListItem");
-        $searchResults.prepend(savedCity);
-      }
-    }
-  }
-
-  function checkRecent() {
-    let getCities = JSON.parse(localStorage.getItem("cities"));
-    if (getCities !== null && $searchBar.val() == null) {
-      mostRecentCity = getCities[getCities.length - 1];
-      console.log(mostRecentCity);
-      citySearch = mostRecentCity;
-      todaysWeather();
-      forecast();
-    }
   }
 });
