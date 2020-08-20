@@ -24,10 +24,10 @@ h1 {
 
 input {
   background-color: #fcf9f9;
-  border: 1px;
-  border-radius: 8px;
+  border: 0px;
+  border-radius: 10px;
+  margin: 10px;
   padding: 8px;
-  padding-right: 30px;
 }
 
 p {
@@ -35,7 +35,7 @@ p {
 }
 
 .todayWeather,
-.todayStats {
+.todayStats, .todayAQI {
     background-image: linear-gradient(#33C7FF, #E0F4FB, #BFEDFE);
   border: 1px dotted;
   padding: 20px;
@@ -47,7 +47,7 @@ p {
     background-image: linear-gradient(#E0F4FB, #33C7FF, #BFEDFE);
 }
 
-.city {
+.city, .aqiHeader {
   font-size: 30px;
 }
 
@@ -56,16 +56,16 @@ p {
 }
 
 .cityListItem {
-  margin: 10px;
-  padding: 10px;
-  border: 1px dotted;
+   border: 1px outset;
+   border-radius: 8px;
+   padding: 10px;
 }
 
 .cityListItem:hover {
   background-color: #fcf9f9;
 }
 
-.uvi {
+.uvi, .aqiLocal {
   padding: 10px;
   border: 1px black solid;
 }
@@ -73,4 +73,8 @@ p {
 .uviKey {
   padding: 10px;
   margin: 8px;
+}
+
+.trash {
+  float: right;
 }
