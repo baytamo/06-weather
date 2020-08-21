@@ -24,9 +24,10 @@ $(document).ready(function () {
       todaysWeather();
       forecast();
       for (i = 0; i < cityArray.length; i++) {
-        let savedCity = $("<p>").text(cityArray[i]);
-        // let trash = $("<img/>").attr("src", "Assets/trash.png").css("width", "26px").addClass("trash");
-        // savedCity.append(trash);
+        let savedCity = $("<p>").text(cityArray[i]).attr("id", "city" + i);
+        let trash = $("<img/>").attr("src", "Assets/trash.png").css("width", "26px").addClass("trash");
+        trash.data('index', i);
+        savedCity.append(trash);
         savedCity.addClass("cityListItem");
         $searchResults.prepend(savedCity);
       }
@@ -35,45 +36,43 @@ $(document).ready(function () {
 
   // on click for cities listed in left column
   $(".cityListItem").on("click", function (event) {
+    event.stopPropagation();
     $(".cityListItem").data("clicked", true);
     todaysWeather();
     forecast();
   });
 
+  // on click so that user can delete a search result
+  $(".trash").on("click", function(event) {
+    event.stopPropagation();
+    let trashIcon = $(event.target);
+    let index = trashIcon.data('index');
+    cityArray.splice(index, 1);
+    localStorage.setItem("cities", JSON.stringify(cityArray));
+    $('#' + trashIcon.parent().attr("id")).remove();
+    location.reload();
+  });
+
+
   // on click for search button
   $searchButton.on("click", function (event) {
+    if (!$searchBar.val()) {
+      return;
+    }
     todaysWeather();
     forecast();
-
-    // add this item to left column
-    let savedCity = $("<p>").text(citySearch);
-    savedCity.addClass("cityListItem");
-    savedCity.on("click", function (event) {
-      todaysWeather();
-      forecast();
-    });
-    $searchResults.prepend(savedCity);
-
-    // add this item to local storage
     cityArray.push(citySearch);
     localStorage.setItem("cities", JSON.stringify(cityArray));
+    location.reload();
   });
 
   // on submit for search input
   $("form").on("submit", function (event) {
+    if (!$searchBar.val()) {
+      return;
+    }
     todaysWeather();
     forecast();
-
-    // add this item to left column
-    let savedCity = $("<p>").text(citySearch);
-    savedCity.addClass("cityListItem");
-    savedCity.on("click", function (event) {
-      todaysWeather();
-      forecast();
-    });
-    $searchResults.prepend(savedCity);
-
-    // add this item to local storage
     cityArray.push(citySearch);
     localStorage.setItem("cities", JSON.stringify(cityArray));
   });
@@ -82,6 +81,7 @@ $(document).ready(function () {
   function todaysWeather() {
     $todayWeather.empty();
     $todayStats.empty();
+    $todayAQI.empty();
 
     getCities = JSON.parse(localStorage.getItem("cities"));
 
@@ -108,19 +108,17 @@ $(document).ready(function () {
     //   "&appid=" + apiKey + "&units=imperial";
     // } else { put below URL here }
 
-      let URL =
+    let URL =
       "https://api.openweathermap.org/data/2.5/weather?q=" +
       citySearch +
       "&appid=" +
       apiKey +
       "&units=imperial";
-    
-  
+
     $.ajax({
       url: URL,
       method: "GET",
     }).then(function (response) {
-      console.log(response);
       let city = $("<p>").addClass("city");
       city.text(response.name + ", " + response.sys.country);
       if (response.sys.country == undefined) {
@@ -193,7 +191,7 @@ $(document).ready(function () {
         .addClass("col-12 p-2")
         .text("0-2 low")
         .css("background-color", "green");
-        low.css("color", "white");
+      low.css("color", "white");
       let moderate = $("<div>")
         .addClass("col-12 p-2")
         .text("3-5 moderate")
@@ -206,12 +204,12 @@ $(document).ready(function () {
         .addClass("col-12 p-2")
         .text("8-10 very high")
         .css("background-color", "red");
-        veryHigh.css("color", "white");
+      veryHigh.css("color", "white");
       let extreme = $("<div>")
         .addClass("col-12 p-2")
         .text("11+ extreme")
         .css("background-color", "blueviolet");
-        extreme.css("color", "white");
+      extreme.css("color", "white");
 
       uvRow.append(low, moderate, high, veryHigh, extreme);
       $todayStats.append(uvRow);
@@ -229,88 +227,106 @@ $(document).ready(function () {
       } else {
         UV.css("background-color", "blueviolet");
         UV.css("color", "white");
-      } 
+      }
     });
   }
 
   function airQualityIndex() {
-    $todayAQI.empty();
-
-    let aqiURL = "https://api.waqi.info/feed/geo:" + latitude + ";" + longitude + "/?token=8323d177d676bcf5b5562025b17328fc56a804df";
+    let aqiURL =
+      "https://api.waqi.info/feed/geo:" +
+      latitude +
+      ";" +
+      longitude +
+      "/?token=8323d177d676bcf5b5562025b17328fc56a804df";
 
     $.ajax({
       url: aqiURL,
       method: "GET",
     }).then(function (response) {
-      
       let AQI = response.data.aqi;
-      
+
       let aqiHeader = $("<p>").addClass("aqiHeader").text("Air Quality Index");
       $todayAQI.append(aqiHeader);
 
-      let aqiLocal = $("<p>").addClass("col-sm-7 aqiLocal").text("Air Quality Index: " + AQI);
+      let aqiLocal = $("<p>")
+        .addClass("col-sm-7 aqiLocal")
+        .text("Air Quality Index: " + AQI);
 
       if (AQI == undefined) {
-        let aqiUnknown = $("<p>").text("Air Quality Index: unknown for this location");
+        let aqiUnknown = $("<p>").text(
+          "Air Quality Index: unknown for this location"
+        );
         $todayAQI.append(aqiUnknown);
       } else {
-    let localTime = moment().utcOffset(response.data.time.tz).format("HH:mm");
-      let localTimeDisplay = $("<p>").text(citySearch + " local time: " + localTime);
-   
-      let aqiStation = $("<p>").text("Closest station: " + response.data.city.name);
-      $todayAQI.append(localTimeDisplay, aqiStation, aqiLocal);
+        let localTime = moment()
+          .utcOffset(response.data.time.tz)
+          .format("HH:mm");
+        let localTimeDisplay = $("<p>").text(
+          citySearch + " local time: " + localTime
+        );
 
-      let $aqiRow = $("<p>").addClass("row m-3 aqiKey");
-      
-      let good = $("<div>")
-        .addClass("col-12 p-2")
-        .text("0-50 good")
-        .css("background-color", "green");
+        let aqiStation = $("<p>").text(
+          "Closest station: " + response.data.city.name
+        );
+        $todayAQI.append(localTimeDisplay, aqiStation, aqiLocal);
+
+        let $aqiRow = $("<p>").addClass("row m-3 aqiKey");
+
+        let good = $("<div>")
+          .addClass("col-12 p-2")
+          .text("0-50 good")
+          .css("background-color", "green");
         good.css("color", "white");
-      let moderate = $("<div>")
-        .addClass("col-12 p-2")
-        .text("51-100 moderate")
-        .css("background-color", "yellow");
-      let sensitive = $("<div>")
-        .addClass("col-12 p-2")
-        .text("101-150 unhealthy for sensitive groups")
-        .css("background-color", "orange");
-      let unhealthy = $("<div>")
-        .addClass("col-12 p-2")
-        .text("151-200 unhealthy")
-        .css("background-color", "red");
+        let moderate = $("<div>")
+          .addClass("col-12 p-2")
+          .text("51-100 moderate")
+          .css("background-color", "yellow");
+        let sensitive = $("<div>")
+          .addClass("col-12 p-2")
+          .text("101-150 unhealthy for sensitive groups")
+          .css("background-color", "orange");
+        let unhealthy = $("<div>")
+          .addClass("col-12 p-2")
+          .text("151-200 unhealthy")
+          .css("background-color", "red");
         unhealthy.css("color", "white");
-      let veryUnhealthy = $("<div>")
-        .addClass("col-12 p-2")
-        .text("201-300 very unhealthy")
-        .css("background-color", "blueviolet");
+        let veryUnhealthy = $("<div>")
+          .addClass("col-12 p-2")
+          .text("201-300 very unhealthy")
+          .css("background-color", "blueviolet");
         veryUnhealthy.css("color", "white");
-      let hazardous = $("<div>")
-        .addClass("col-12 p-2")
-        .text("301+ hazardous")
-        .css("background-color", "maroon");
+        let hazardous = $("<div>")
+          .addClass("col-12 p-2")
+          .text("301+ hazardous")
+          .css("background-color", "maroon");
         hazardous.css("color", "white");
 
-
-      if (AQI <= 50) {
-        aqiLocal.css("background-color", "green");
-        aqiLocal.css("color", "white");
-      } else if (AQI <= 100) {
-        aqiLocal.css("background-color", "yellow");
-      } else if (AQI <= 150) {
-        aqiLocal.css("background-color", "orange");
-      } else if (AQI <= 200) {
-        aqiLocal.css("background-color", "red");
-        aqiLocal.css("color", "white");
-      } else if (AQI <= 300) {
-        aqiLocal.css("background-color", "blueviolet");
-        aqiLocal.css("color", "white");
-      } else {
-        aqiLocal.css("background-color", "maroon");
-        aqiLocal.css("background-color", "white");
-      }
-      $aqiRow.append(good, moderate, sensitive, unhealthy, veryUnhealthy, hazardous);
-      $todayAQI.append($aqiRow);
+        if (AQI <= 50) {
+          aqiLocal.css("background-color", "green");
+          aqiLocal.css("color", "white");
+        } else if (AQI <= 100) {
+          aqiLocal.css("background-color", "yellow");
+        } else if (AQI <= 150) {
+          aqiLocal.css("background-color", "orange");
+        } else if (AQI <= 200) {
+          aqiLocal.css("background-color", "red");
+          aqiLocal.css("color", "white");
+        } else if (AQI <= 300) {
+          aqiLocal.css("background-color", "blueviolet");
+          aqiLocal.css("color", "white");
+        } else {
+          aqiLocal.css("background-color", "maroon");
+          aqiLocal.css("background-color", "white");
+        }
+        $aqiRow.append(
+          good,
+          moderate,
+          sensitive,
+          unhealthy,
+          veryUnhealthy,
+          hazardous
+        );
+        $todayAQI.append($aqiRow);
       }
     });
   }
@@ -341,7 +357,11 @@ $(document).ready(function () {
         "&units=imperial",
       method: "GET",
     }).then(function (response) {
-      console.log(response);
+      let fiveDay = $("<div>")
+        .text(response.city.name + " 5-Day Forecast")
+        .addClass("col-12 fiveDay");
+      $nextFive.append(fiveDay);
+
       // start at index 1 because index 0 is today
       for (var i = 1; i < 6; i++) {
         let nextDay = $("<div>").addClass("col-sm-2 pt-2 nextDay");
@@ -349,7 +369,7 @@ $(document).ready(function () {
         let date = $("<p>").text(moment().add(i, "days").format("ddd DD MMM"));
 
         let temp = $("<p>").text(
-          "temp: " + Math.round(response.list[i].main.temp) + "ºF"
+          "Temp: " + Math.round(response.list[i].main.temp) + "ºF"
         );
 
         let humidity = $("<p>").text(

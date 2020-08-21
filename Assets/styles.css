@@ -11,6 +11,13 @@ h1 {
   font-family: "Russo One", sans-serif;
 }
 
+.searchButton {
+  cursor: pointer;
+}
+
+.searchButton:hover {
+  filter: drop-shadow(2px 4px 4px);
+}
 
 .searchBar {
   background-color: lightgrey;
@@ -47,21 +54,22 @@ p {
     background-image: linear-gradient(#E0F4FB, #33C7FF, #BFEDFE);
 }
 
-.city, .aqiHeader {
+.city, .aqiHeader, .fiveDay {
   font-size: 30px;
 }
 
 .currentTemp {
-  font-size: 80px;
+  font-size: 90px;
 }
 
 .cityListItem {
    border: 1px outset;
    border-radius: 8px;
    padding: 10px;
+   cursor: pointer;
 }
 
-.cityListItem:hover {
+.cityListItem:hover, .clearResults:hover {
   background-color: #fcf9f9;
 }
 
@@ -77,4 +85,5 @@ p {
 
 .trash {
   float: right;
+  cursor: pointer;
 }
