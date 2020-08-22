@@ -364,7 +364,7 @@ $(document).ready(function () {
 
       // start at index 1 because index 0 is today
       for (var i = 1; i < 6; i++) {
-        let nextDay = $("<div>").addClass("col-sm-4 col-lg-2 pt-2 nextDay");
+        let nextDay = $("<div>").addClass("col-sm-5 col-lg-2 pt-2 nextDay");
 
         let date = $("<p>").text(moment().add(i, "days").format("ddd DD MMM"));
 
