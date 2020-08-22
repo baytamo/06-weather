@@ -359,12 +359,12 @@ $(document).ready(function () {
     }).then(function (response) {
       let fiveDay = $("<div>")
         .text(response.city.name + " 5-Day Forecast")
-        .addClass("col-12 fiveDay");
+        .addClass("col-12 d-flex justify-content-center fiveDay");
       $nextFive.append(fiveDay);
 
       // start at index 1 because index 0 is today
       for (var i = 1; i < 6; i++) {
-        let nextDay = $("<div>").addClass("col-sm-2 pt-2 nextDay");
+        let nextDay = $("<div>").addClass("col-sm-4 col-lg-2 pt-2 nextDay");
 
         let date = $("<p>").text(moment().add(i, "days").format("ddd DD MMM"));
 
