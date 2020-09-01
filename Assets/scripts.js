@@ -23,7 +23,7 @@ $(document).ready(function () {
       cityArray = getCities;
       todaysWeather();
       forecast();
-      for (i = 0; i < cityArray.length; i++) {
+      for (let i = 0; i < cityArray.length; i++) {
         let savedCity = $("<p>").text(cityArray[i]).attr("id", "city" + i);
         let trash = $("<img/>").attr("src", "Assets/trash.png").css("width", "26px").addClass("trash");
         trash.data('index', i);
@@ -158,7 +158,8 @@ $(document).ready(function () {
       $todayWeather.append(city, description, icon, currentTemp, today, date);
       $todayStats.append(tempHigh, tempLow, humidity, wind);
 
-      // these will be needed for UV index
+      // these will be needed for UV index and AQI
+      cityName = response.name;
       latitude = response.coord.lat;
       longitude = response.coord.lon;
       uvIndex();
@@ -180,13 +181,15 @@ $(document).ready(function () {
       url: URL,
       method: "GET",
     }).then(function (response) {
+      let row = $("<div>").addClass("row d-flex justify-content-center");
       let UV = $("<div>")
-        .addClass("col-sm-7 uvi")
+        .addClass("col-5 col-sm-8 uvi")
         .text("UV Index: " + Math.round(response.value));
-      $todayStats.append(UV);
+        row.append(UV)
+      $todayStats.append(row);
       let uvIndex = Math.round(response.value);
 
-      let uvRow = $("<p>").addClass("row uviKey");
+      let uvRow = $("<div>").addClass("row uviKey");
       let low = $("<div>")
         .addClass("col-12 p-2")
         .text("0-2 low")
@@ -248,13 +251,14 @@ $(document).ready(function () {
       let aqiHeader = $("<p>").addClass("aqiHeader").text("Air Quality Index");
       $todayAQI.append(aqiHeader);
 
-      let aqiLocal = $("<p>")
-        .addClass("col-sm-7 aqiLocal")
-        .text("Air Quality Index: " + AQI);
+      let row = $("<div>").addClass("row d-flex justify-content-center");
+      let aqiLocal = $("<div>")
+        .addClass("col-4 col-sm-6 aqiLocal")
+        .text("AQI: " + AQI);
 
       if (AQI == undefined) {
         let aqiUnknown = $("<p>").text(
-          "Air Quality Index: unknown for this location"
+          "AQI: unknown for this location"
         );
         $todayAQI.append(aqiUnknown);
       } else {
@@ -262,15 +266,16 @@ $(document).ready(function () {
           .utcOffset(response.data.time.tz)
           .format("HH:mm");
         let localTimeDisplay = $("<p>").text(
-          citySearch + " local time: " + localTime
+          cityName + " local time: " + localTime
         );
 
         let aqiStation = $("<p>").text(
           "Closest station: " + response.data.city.name
         );
-        $todayAQI.append(localTimeDisplay, aqiStation, aqiLocal);
+        row.append(aqiLocal)
+        $todayAQI.append(localTimeDisplay, aqiStation, row);
 
-        let $aqiRow = $("<p>").addClass("row m-3 aqiKey");
+        let $aqiRow = $("<div>").addClass("row aqiKey");
 
         let good = $("<div>")
           .addClass("col-12 p-2")
@@ -364,7 +369,7 @@ $(document).ready(function () {
 
       // start at index 1 because index 0 is today
       for (var i = 1; i < 6; i++) {
-        let nextDay = $("<div>").addClass("col-sm-5 col-lg-2 pt-2 nextDay");
+        let nextDay = $("<div>").addClass("col-5 col-lg-2 pt-2 nextDay");
 
         let date = $("<p>").text(moment().add(i, "days").format("ddd DD MMM"));
 

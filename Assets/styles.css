@@ -13,6 +13,7 @@ h1 {
 
 .searchButton {
   cursor: pointer;
+  height: 30px;
 }
 
 .searchButton:hover {
@@ -75,12 +76,15 @@ p {
 
 .uvi, .aqiLocal {
   padding: 10px;
-  border: 1px black solid;
+  border-radius: 20px;
+  text-align: center;
+  font-size: 22px;
+  margin: 10px;
 }
 
-.uviKey {
-  padding: 10px;
-  margin: 8px;
+.uviKey, .aqiKey {
+  font-size: 12px;
+  margin: 3px;
 }
 
 .trash {
