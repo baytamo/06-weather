@@ -1,6 +1,8 @@
 body {
   margin: 0 auto;
-  padding: 50px;
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-bottom: 20px;
   font-family: 'Rubik', sans-serif;
 }
 
@@ -25,8 +27,8 @@ h1 {
 }
 
 .nextDay {
-  border: 1px dotted;
   border-radius: 20px;
+  filter: drop-shadow(4px 4px 2px #504C4C);
   margin: 10px;
 }
 
@@ -44,15 +46,15 @@ p {
 
 .todayWeather,
 .todayStats, .todayAQI {
-  background-image: linear-gradient(#33C7FF, #E0F4FB, #BFEDFE);
-  border: 1px dotted;
+  background-image: linear-gradient(#7CD9FF, #B5E9FF, #DCF4FE);
+  filter: drop-shadow(4px 4px 2px #504C4C);
   padding: 20px;
   border-radius: 20px;
   margin: 5px;
 }
 
 .nextDay {
-    background-image: linear-gradient(#E0F4FB, #33C7FF, #BFEDFE);
+    background-image: linear-gradient(#DCF4FE, #B5E9FF, #7CD9FF);
 }
 
 .city, .aqiHeader, .fiveDay {
