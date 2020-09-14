@@ -321,7 +321,7 @@ $(document).ready(function () {
           aqiLocal.css("color", "white");
         } else {
           aqiLocal.css("background-color", "maroon");
-          aqiLocal.css("background-color", "white");
+          aqiLocal.css("color", "white");
         }
         $aqiRow.append(
           good,
